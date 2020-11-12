@@ -6,10 +6,10 @@
     <title>Document</title>
 </head>
 <body>
-    <% for( var i of arr) { %>
-        <img src=<%= i %>  width="500" height="600">
-   <% } %>
-        
+    <% for(var i = 0;i < obj.recordset.length;i++) { %>
+    
+        <img src= <%= obj.recordset[i].LINK %>>
+    <% } %>
 </body>
 </html>
 
