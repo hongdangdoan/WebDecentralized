@@ -36,11 +36,32 @@ app.get('/', (req, res) => {
 app.get('/show',(req, res) =>{
     
     arr = fs.readFileSync('link.txt',"utf8").toString().split("\n");
-
+    var arr;
+    sql.connect(config, function(err){
+        
+        if(err){
+            console.log('Loi ket noi database');
+            console.log(err);
+        }
+        let sqlRequest = new sql.Request();
+        // query
+        let sqlQuery = 'SELECT * FROM IMG' ;
+        sqlRequest.query(sqlQuery,function(err, data){
+            if(err){
+                console.log('Loi truy van database');
+                console.log(err);
+            }
+            obj = {print: data};
+            sql.close();
+            res.render('show',{obj: data});
+            
+            
+        });
+        
+    });
     
  
-    
-    res.render('home',{arr: arr});
+
 });
 app.post('/upload', (req, res) => {
     const file = req.files.file;
