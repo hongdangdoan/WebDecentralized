@@ -7,10 +7,8 @@ const fs = require('fs');
 const ipfs = new ipfsClient({ host: 'localhost', port: '5001', protocol: 'http'});
 const app = express();
 
-//test database
-//access the drivers
 var sql = require('mssql');
-//config for my database
+
 const config = {
     user: 'sa',
     password: 'sa123',
@@ -22,8 +20,6 @@ const config = {
         "enableArithAbort": true
         }
 };
-//
-
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
@@ -34,8 +30,7 @@ app.get('/', (req, res) => {
     res.render('home');
 });
 app.get('/show',(req, res) =>{
-    
-    arr = fs.readFileSync('link.txt',"utf8").toString().split("\n");
+     
     var arr;
     sql.connect(config, function(err){
         
@@ -44,7 +39,7 @@ app.get('/show',(req, res) =>{
             console.log(err);
         }
         let sqlRequest = new sql.Request();
-        // query
+        
         let sqlQuery = 'SELECT * FROM IMG' ;
         sqlRequest.query(sqlQuery,function(err, data){
             if(err){
@@ -54,13 +49,10 @@ app.get('/show',(req, res) =>{
             obj = {print: data};
             sql.close();
             res.render('show',{obj: data});
-            
-            
+               
         });
         
     });
-    
- 
 
 });
 app.post('/upload', (req, res) => {
@@ -93,11 +85,11 @@ const addFile = async (fileName,filePath)  => {
 
         sql.connect(config, function(err){
             if(err){
-                console.log('Loi ket noi database');
+                console.log('Connect database error');
                 console.log(err);
             }
             let sqlRequest = new sql.Request();
-            // query
+            
             let sqlQuery = "INSERT INTO IMG (LINK) VALUES(  "
             +" 'https://ipfs.io/ipfs/" +fileHash+"'"+ ')' ;
             sqlRequest.query(sqlQuery,function(err, data){
@@ -106,16 +98,10 @@ const addFile = async (fileName,filePath)  => {
                     console.log(err);
                 }
                 console.table(data.recordset);
-                //close connection
+                
                 sql.close();
             });
         });
-
-    
-
-    
-   
-    
 }
 
 app.listen(3000, () => {
